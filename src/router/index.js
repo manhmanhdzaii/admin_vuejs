@@ -18,25 +18,38 @@ import EditProductsView from '../views/products/EditView.vue'
 import ListOrdersView from '../views/orders/ListView.vue'
 import ViewOrdersView from '../views/orders/ViewView.vue'
 
+import ForGotView from '../views/password/ForGotView.vue'
+import ResetView from '../views/password/ResetView.vue'
+
+function is_outside(to, from, next){
+  var token = localStorage.getItem('token');
+  if(!token){
+    next();
+  }else{
+    next({name: 'home'});
+  }
+}
+function is_Login(to, from, next){
+  var token = localStorage.getItem('token');
+  if(token){
+    next();
+  }else{
+    next({name: 'login'});
+  }
+}
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       name: 'home',
+      beforeEnter: [is_Login],
       component: HomeView,
-      beforeEnter: (to, from, next) => {
-        var token = localStorage.getItem('token');
-        if(token){
-          next();
-        }else{
-          next({name: 'login'});
-        }
-        },
     },
     {
       path: '/users',
       name: 'users',
+      beforeEnter: [is_Login],
       children: [
         {
           path: 'show',
@@ -55,18 +68,11 @@ const router = createRouter({
           component: EditUsersView,
         },
       ],
-      beforeEnter: (to, from, next) => {
-        var token = localStorage.getItem('token');
-        if(token){
-          next();
-        }else{
-          next({name: 'login'});
-        }
-        },
     },
     {
       path: '/products',
       name: 'products',
+      beforeEnter: [is_Login],
       children: [
         {
           path: 'list',
@@ -81,18 +87,11 @@ const router = createRouter({
           component: EditProductsView,
         },
       ],
-      beforeEnter: (to, from, next) => {
-        var token = localStorage.getItem('token');
-        if(token){
-          next();
-        }else{
-          next({name: 'login'});
-        }
-        },
     },
     {
       path: '/categories',
       name: 'categories',
+      beforeEnter: [is_Login],
       children: [
         {
           path: 'list',
@@ -107,18 +106,11 @@ const router = createRouter({
           component: EditCategoriesView,
         },
       ],
-      beforeEnter: (to, from, next) => {
-        var token = localStorage.getItem('token');
-        if(token){
-          next();
-        }else{
-          next({name: 'login'});
-        }
-        },
     },
     {
       path: '/orders',
       name: 'orders',
+      beforeEnter: [is_Login],
       children: [
         {
           path: 'list',
@@ -129,22 +121,34 @@ const router = createRouter({
           component: ViewOrdersView,
         },
       ],
-      beforeEnter: (to, from, next) => {
-      var token = localStorage.getItem('token');
-      if(token){
-        next();
-      }else{
-        next({name: 'login'});
-      }
-      },
-
     },
     {
       path: '/login',
       name: 'login',
       component: LoginView,
+      beforeEnter: [is_outside],
+    },
+    {
+      path: '/password',
+      name: 'password',
+      beforeEnter: [is_outside],
+      children: [
+        {
+          path: 'forgot',
+          component: ForGotView,
+        },
+        {
+          path: 'reset-password/:token',
+          component: ResetView,
+        },
+      ],
     },
   ]
 })
+// router.beforeEach((to, from, next) => {
+//   var token = localStorage.getItem('token');
+//   if ((to.name !== 'login') && !token) next({ name: 'login' })
+//   else next()
+// });
 
 export default router

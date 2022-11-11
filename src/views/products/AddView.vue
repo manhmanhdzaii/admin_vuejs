@@ -2,15 +2,14 @@
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Thêm sản phẩm</h1>
   </div>
-  <form
-    action=""
-    method="post"
+  <Form
+    :validation-schema="schema"
     enctype="multipart/form-data"
-    @submit.prevent="save()"
+    @submit="save()"
   >
     <div class="mb-3">
       <label for="">Tên sản phẩm</label>
-      <input
+      <Field
         name="name"
         type="text"
         class="form-control"
@@ -18,10 +17,11 @@
         v-model="product.name"
       />
       <span style="color: red" v-if="err.name"> {{ err.name[0] }} </span>
+      <ErrorMessage style="color: red" name="name" />
     </div>
     <div class="mb-3">
       <label for="">Giá sản phẩm ($)</label>
-      <input
+      <Field
         name="price"
         type="number"
         class="form-control"
@@ -29,11 +29,13 @@
         v-model="product.price"
       />
       <span style="color: red" v-if="err.price"> {{ err.price[0] }} </span>
+      <ErrorMessage style="color: red" name="price" />
     </div>
     <div class="mb-3">
       <label for="">Màu sản phẩm</label>
-      <select
-        name="color_id[]"
+      <Field
+        as="select"
+        name="color_id"
         id="color_id"
         class="form-control"
         v-model="product.color_id"
@@ -42,15 +44,17 @@
         <option :value="color.id" v-for="(color, index) in colors" :key="index">
           {{ color.name }}
         </option>
-      </select>
+      </Field>
       <span style="color: red" v-if="err.color_id">
         {{ err.color_id[0] }}
       </span>
+      <ErrorMessage style="color: red" name="color_id" />
     </div>
     <div class="mb-3">
       <label for="">Size sản phẩm</label>
-      <select
-        name="size_id[]"
+      <Field
+        as="select"
+        name="size_id"
         id="size_id"
         class="form-control"
         v-model="product.size_id"
@@ -59,19 +63,22 @@
         <option :value="size.id" v-for="(size, index) in sizes" :key="index">
           {{ size.name }}
         </option>
-      </select>
+      </Field>
       <span style="color: red" v-if="err.size_id">
         {{ err.size_id[0] }}
       </span>
+      <ErrorMessage style="color: red" name="size_id" />
     </div>
     <div class="mb-3">
       <label for="">Danh mục</label>
-      <select
+      <Field
+        as="select"
         name="category_id"
         id="category_id"
         class="form-control"
         v-model="product.category_id"
       >
+        <option value="">Chọn danh mục</option>
         <option
           :value="category.id"
           v-for="(category, index) in categories"
@@ -79,19 +86,21 @@
         >
           {{ category.name }}
         </option>
-      </select>
+      </Field>
       <span style="color: red" v-if="err.category_id">
         {{ err.category_id[0] }}
       </span>
+      <ErrorMessage style="color: red" name="category_id" />
     </div>
     <div class="mb-3">
       <label for="">Hình ảnh sản phẩm</label>
       <div class="custom-file">
-        <input
+        <Field
           type="file"
           class="form-control"
           id="img"
           name="img"
+          v-model="product.img"
           @change="loadFile1($event)"
         />
         <label class="custom-file-label" for="img">Choose file</label>
@@ -99,6 +108,7 @@
       <span style="color: red" v-if="err.img">
         {{ err.img[0] }}
       </span>
+      <ErrorMessage style="color: red" name="img" />
     </div>
     <div class="mb-3">
       <div class="img_prew">
@@ -136,22 +146,26 @@
     </div>
     <div class="mb-3">
       <label for="">Mô tả chi tiết</label>
-      <textarea
+      <Field
+        as="textarea"
         name="description"
         id="description"
         class="form-control"
         v-model="product.description"
-      ></textarea>
+      ></Field>
       <span style="color: red" v-if="err.description">
         {{ err.description[0] }}
       </span>
+      <ErrorMessage style="color: red" name="description" />
     </div>
 
     <button class="btn btn-primary" type="submit">Thêm mới</button>
-  </form>
+  </Form>
 </template>
 
 <script>
+import { Form, Field, ErrorMessage } from "vee-validate";
+import * as yup from "yup";
 export default {
   name: "addproduct",
   data() {
@@ -166,10 +180,11 @@ export default {
       product: {
         name: "",
         price: "",
-        color_id: [],
-        size_id: [],
+        color_id: "",
+        size_id: "",
         category_id: "",
         description: "",
+        img: "",
       },
     };
   },
@@ -177,6 +192,24 @@ export default {
     this.getColors();
     this.getSize();
     this.getCategories();
+  },
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+  },
+  computed: {
+    schema() {
+      return yup.object({
+        name: yup.string().required().label("Name"),
+        price: yup.string().required().label("Price"),
+        color_id: yup.array().required().label("Color"),
+        size_id: yup.array().required().label("Size"),
+        category_id: yup.string().required().label("Category"),
+        description: yup.string().required().label("Description"),
+        img: yup.string().required().label("Img"),
+      });
+    },
   },
   methods: {
     getColors() {

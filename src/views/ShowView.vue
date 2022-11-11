@@ -2,92 +2,122 @@
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Thông tin cá nhân</h1>
   </div>
-  <form action="" method="put" @submit.prevent="save()">
+  <Form @submit="save()" :validation-schema="schema">
     <div class="mb-3">
       <label for="">Tên</label>
-      <input
+      <Field
         name="name"
         id="name"
         type="text"
         class="form-control"
         placeholder="Tên...."
-        :value="user.name"
+        v-model="user.name"
       />
-      <span style="color: red" v-if="err.name"> {{ err.name[0] }} </span>
+      <span style="color: red" v-if="sub_err.name">
+        {{ sub_err.name[0] }}
+      </span>
+      <ErrorMessage style="color: red" name="name" />
     </div>
     <div class="mb-3">
       <label for="">Email</label>
-      <input
+      <Field
         name="email"
         id="email"
         type="text"
         class="form-control"
         placeholder="Email...."
-        :value="user.email"
+        v-model="user.email"
       />
-      <span style="color: red" v-if="err.email"> {{ err.email[0] }} </span>
+      <span style="color: red" v-if="sub_err.email">
+        {{ sub_err.email[0] }}
+      </span>
+      <ErrorMessage style="color: red" name="email" />
     </div>
     <div class="mb-3">
       <label for="">Mật khẩu(Không nhập nếu không đổi)</label>
-      <input
+      <Field
         name="password"
         id="password"
         type="password"
         class="form-control"
         placeholder="Password...."
       />
-      <span style="color: red" v-if="err.password">
-        {{ err.password[0] }}
+      <span style="color: red" v-if="sub_err.password">
+        {{ sub_err.password[0] }}
       </span>
     </div>
     <div class="mb-3">
       <label for="">Chức vụ</label>
-      <select name="role" class="form-control" id="role" disabled>
+      <Field
+        as="select"
+        name="role"
+        class="form-control"
+        id="role"
+        v-model="user.role"
+        disabled
+      >
         <option value="">Chọn chức vụ</option>
-        <option value="nomal" :selected="checkVal(user.role, 'nomal')">
-          Người dùng
-        </option>
-        <option value="admin" :selected="checkVal(user.role, 'admin')">
-          Admin
-        </option>
-      </select>
-      <span style="color: red" v-if="err.role"> {{ err.role[0] }} </span>
+        <option value="nomal">Người dùng</option>
+        <option value="admin">Admin</option>
+      </Field>
+      <span style="color: red" v-if="sub_err.role">
+        {{ sub_err.role[0] }}
+      </span>
+      <ErrorMessage style="color: red" name="role" />
     </div>
     <div class="mb-3">
       <label for="">Kích hoạt</label>
-      <select
+      <Field
+        as="select"
         name="email_verified_at"
         class="form-control"
         id="email_verified_at"
+        v-model="email_verified_at"
       >
         <option value="">Chọn kích hoạt</option>
-        <option value="0" :selected="checkVerified(user.email_verified_at, 0)">
-          Không kích hoạt
-        </option>
-        <option value="1" :selected="checkVerified(user.email_verified_at, 1)">
-          Kích hoạt
-        </option>
-      </select>
-      <span style="color: red" v-if="err.email_verified_at">
-        {{ err.email_verified_at[0] }}
+        <option value="0">Không kích hoạt</option>
+        <option value="1">Kích hoạt</option>
+      </Field>
+      <span style="color: red" v-if="sub_err.email_verified_at">
+        {{ sub_err.email_verified_at[0] }}
       </span>
+      <ErrorMessage style="color: red" name="email_verified_at" />
     </div>
     <button class="btn btn-primary" type="submit">Cập nhật</button>
-  </form>
+  </Form>
 </template>
 
 <script>
+import { Form, Field, ErrorMessage } from "vee-validate";
+import * as yup from "yup";
 export default {
   name: "edituser",
   data() {
     return {
       user: [],
-      err: [],
+      sub_err: [],
+      email_verified_at: "",
       isPointer: false,
+      favorite: "tea",
     };
   },
   created() {
     this.getUser();
+  },
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+  },
+  computed: {
+    schema() {
+      return yup.object({
+        name: yup.string().required().label("Name"),
+        email: yup.string().required().email().label("Email"),
+        role: yup.string().required().label("Role"),
+        email_verified_at: yup.string().required().label("Email verified"),
+      });
+    },
   },
   methods: {
     getUser() {
@@ -99,28 +129,11 @@ export default {
           Authorization: `Bearer ${token}`,
         },
       }).then((res) => {
+        console.log(res.data.data);
         this.user = res.data.data;
+        this.email_verified_at = res.data.data.email_verified_at ? 1 : 0;
+        this.$store.commit("change_name", res.data.data.name);
       });
-    },
-    checkVal(val1, val2) {
-      if (val1 == val2) {
-        return true;
-      }
-      return false;
-    },
-    checkVerified(val, num) {
-      if (num == 0) {
-        if (val) {
-          return false;
-        }
-        return true;
-      }
-      if (num == 1) {
-        if (val) {
-          return true;
-        }
-        return false;
-      }
     },
     save() {
       this.isPointer = true;
@@ -156,7 +169,7 @@ export default {
         },
         (err) => {
           this.isPointer = false;
-          this.err = err.response.data.errors;
+          this.sub_err = err.response.data.errors;
           console.log(err);
         }
       );

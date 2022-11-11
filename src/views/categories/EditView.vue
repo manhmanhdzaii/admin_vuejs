@@ -2,24 +2,33 @@
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Sửa danh mục sản phẩm</h1>
   </div>
-  <form action="" method="post" @submit.prevent="save()">
+  <Form @submit.prevent="save()" :validation-schema="schema">
     <div class="mb-3">
       <label for="">Tên danh mục</label>
-      <input
+      <Field
         name="name"
         type="text"
         class="form-control"
         placeholder="Nhập tên danh mục...."
         id="name"
-        :value="category.name"
+        v-model="category.name"
       />
       <span style="color: red" v-if="err.name"> {{ err.name[0] }} </span>
+      <ErrorMessage style="color: red" name="name" />
     </div>
-    <button class="btn btn-primary" type="submit">Cập nhật</button>
-  </form>
+    <button
+      class="btn btn-primary"
+      type="submit"
+      :class="{ pointer: isPointer }"
+    >
+      Cập nhật
+    </button>
+  </Form>
 </template>
 
 <script>
+import { Form, Field, ErrorMessage } from "vee-validate";
+import * as yup from "yup";
 export default {
   name: "editcategories",
   data() {
@@ -31,6 +40,18 @@ export default {
   },
   created() {
     this.getCategory();
+  },
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+  },
+  computed: {
+    schema() {
+      return yup.object({
+        name: yup.string().required().label("Name"),
+      });
+    },
   },
   methods: {
     getCategory() {
@@ -65,6 +86,7 @@ export default {
           } else {
             alert("Cập nhật danh mục sản phẩm thất bại");
           }
+          this.isPointer = false;
         },
         (err) => {
           this.isPointer = false;

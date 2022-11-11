@@ -5,7 +5,7 @@ import { RouterLink, RouterView } from "vue-router";
 
 <template>
   <div id="wrapper">
-    <cpnSideBar />
+    <cpnSideBar v-if="this.$store.state.isLogin" />
     <div id="content-wrapper" class="d-flex flex-column">
       <!-- Main Content -->
       <div id="content">
@@ -107,7 +107,7 @@ import { RouterLink, RouterView } from "vue-router";
                 @click="showInfo()"
               >
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{
-                  name
+                  this.$store.state.name
                 }}</span>
                 <img
                   class="img-profile rounded-circle"
@@ -185,10 +185,7 @@ import { RouterLink, RouterView } from "vue-router";
 <script>
 export default {
   data() {
-    return {
-      token: localStorage.getItem("token"),
-      name: localStorage.getItem("name"),
-    };
+    return {};
   },
   methods: {
     showInfo() {
@@ -197,7 +194,7 @@ export default {
     logout() {
       localStorage.removeItem("name");
       localStorage.removeItem("token");
-
+      this.$store.commit("change_name", "");
       this.$store.commit("is_login", false);
       this.$router.push({ name: "login" });
     },

@@ -13,6 +13,7 @@ const store = createStore({
     state () {
         return {
             isLogin: localStorage.getItem("token") ? true : false,
+            name: localStorage.getItem("name"),
         }
     },
     getters: {
@@ -25,9 +26,9 @@ const store = createStore({
                 state.isLogin = false;
             }
         },
-        tg(state, a){
-            state.aa = a;
-        }
+        change_name(state, name){
+           state.name = name;
+        },
     }
 
 })

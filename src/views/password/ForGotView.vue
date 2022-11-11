@@ -1,47 +1,25 @@
 <template>
-  <Form
+  <form
     action=""
     method="post"
     class="login_form"
     enctype="multipart/form-data"
-    @submit="save()"
-    :validation-schema="schema"
+    @submit.prevent="save()"
   >
     <div class="d_flex">
-      <p class="min_w_100">Tên đăng nhập</p>
+      <p class="min_w_100">Email</p>
       <div class="div">
-        <Field
+        <input
           type="text"
-          placeholder="Nhập tên đăng nhập"
+          placeholder="Nhập email.."
           class="box_input"
           name="user_name"
           v-model="data.email"
         />
         <p class="err">
-          <ErrorMessage name="user_name" />
+          <span v-if="err.email">{{ err.email[0] }}</span>
         </p>
       </div>
-    </div>
-    <div class="d_flex">
-      <p class="min_w_100">Mật khẩu</p>
-      <div class="div">
-        <Field
-          type="password"
-          placeholder="Nhập mật khẩu"
-          class="box_input"
-          name="password"
-          v-model="data.password"
-        />
-        <p class="err">
-          <ErrorMessage name="password" />
-        </p>
-      </div>
-    </div>
-    <div class="d_flex">
-      <p class="min_w_100"></p>
-      <router-link to="/password/forgot" style="margin-left: 20px"
-        >Quên mật khẩu ?</router-link
-      >
     </div>
     <div class="box_login">
       <input
@@ -51,59 +29,45 @@
         :class="{ pointer: isPointer }"
       />
     </div>
-  </Form>
+  </form>
 </template>
 
 <script>
-import { Form, Field, ErrorMessage } from "vee-validate";
-import * as yup from "yup";
 export default {
-  name: "login",
+  name: "forgotpass",
   data() {
     return {
       data: {
         email: "",
-        password: "",
       },
+      err: [],
       isPointer: false,
     };
-  },
-  components: {
-    Form,
-    Field,
-    ErrorMessage,
   },
   methods: {
     save() {
       this.isPointer = true;
       this.$request({
         method: "post",
-        url: "http://127.0.0.1:8000/api/login",
+        url: "http://127.0.0.1:8000/api/forgot-password",
         data: {
           email: this.data.email,
-          password: this.data.password,
         },
-      }).then((res) => {
-        if (res.data.status == 200) {
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("name", res.data.name);
-          this.$store.commit("is_login", "login");
-          this.$store.commit("change_name", res.data.name);
-          this.$router.push({ name: "home" });
-          alert("Đăng nhập thành công");
-        } else {
+      }).then(
+        (res) => {
+          alert(res.data.content);
+          if (res.data.status == "success") {
+          } else {
+            this.data.email = "";
+            this.isPointer = false;
+          }
+        },
+        (err) => {
           this.isPointer = false;
-          this.errors.email = "Tài khoản hoặc mật khẩu chưa chính xác";
+          this.err = err.response.data.errors;
+          console.log(err.response.data.errors);
         }
-      });
-    },
-  },
-  computed: {
-    schema() {
-      return yup.object({
-        user_name: yup.string().required().email().label("Email"),
-        password: yup.string().required().label("Password"),
-      });
+      );
     },
   },
 };
@@ -126,7 +90,7 @@ export default {
   display: flex;
 }
 .min_w_100 {
-  min-width: 150px;
+  min-width: 50px;
 }
 .box_input {
   width: 300px;

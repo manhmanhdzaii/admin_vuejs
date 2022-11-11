@@ -3,78 +3,19 @@
     <h1 class="h3 mb-0 text-gray-800">Thêm người dùng</h1>
   </div>
 
-  <form action="" method="post" @submit.prevent="save()">
-    <div class="mb-3">
-      <label for="">Tên</label>
-      <input
-        name="name"
-        type="text"
-        class="form-control"
-        placeholder="Tên...."
-        v-model="user.name"
-      />
-      <span style="color: red" v-if="err.name"> {{ err.name[0] }} </span>
-    </div>
-    <div class="mb-3">
-      <label for="">Email</label>
-      <input
-        name="email"
-        type="text"
-        class="form-control"
-        placeholder="Email...."
-        v-model="user.email"
-      />
-      <span style="color: red" v-if="err.email"> {{ err.email[0] }} </span>
-    </div>
-    <div class="mb-3">
-      <label for="">Mật khẩu</label>
-      <input
-        name="password"
-        type="password"
-        class="form-control"
-        placeholder="Password...."
-        v-model="user.password"
-      />
-      <span style="color: red" v-if="err.password">
-        {{ err.password[0] }}
-      </span>
-    </div>
-    <div class="mb-3">
-      <label for="">Chức vụ</label>
-      <select name="role" class="form-control" id="role" v-model="user.role">
-        <option value="">Chọn chức vụ</option>
-        <option value="nomal">Người dùng</option>
-        <option value="admin">Admin</option>
-      </select>
-      <span style="color: red" v-if="err.role"> {{ err.role[0] }} </span>
-    </div>
-    <div class="mb-3">
-      <label for="">Kích hoạt</label>
-      <select
-        name="email_verified_at"
-        class="form-control"
-        id="email_verified_at"
-        v-model="user.email_verified_at"
-      >
-        <option value="">Chọn kích hoạt</option>
-        <option value="0">Không kích hoạt</option>
-        <option value="1">Kích hoạt</option>
-      </select>
-      <span style="color: red" v-if="err.email_verified_at">
-        {{ err.email_verified_at[0] }}
-      </span>
-    </div>
-    <button
-      class="btn btn-primary"
-      :class="{ pointer: isPointer }"
-      type="submit"
-    >
-      Thêm mới
-    </button>
-  </form>
+  <usercpn
+    :isPointer="isPointer"
+    @changeUser="save"
+    :err="err"
+    :user="user"
+    :schema="schema"
+    :title="title"
+  />
 </template>
 
 <script>
+import * as yup from "yup";
+import UserCpm from "../../components/User.vue";
 export default {
   name: "adduser",
   data() {
@@ -88,10 +29,25 @@ export default {
       },
       err: [],
       isPointer: false,
+      title: "Thêm mới",
     };
   },
+  components: {
+    usercpn: UserCpm,
+  },
+  computed: {
+    schema() {
+      return yup.object({
+        name: yup.string().required().label("Name"),
+        email: yup.string().required().email().label("Email"),
+        password: yup.string().required().label("Password"),
+        role: yup.string().required().label("Role"),
+        email_verified_at: yup.string().required().label("Email verified"),
+      });
+    },
+  },
   methods: {
-    save() {
+    save(user) {
       this.isPointer = true;
       this.$request({
         method: "post",
@@ -100,11 +56,11 @@ export default {
           "Content-Type": "application/json",
         },
         data: {
-          name: this.user.name,
-          email: this.user.email,
-          password: this.user.password,
-          role: this.user.role,
-          email_verified_at: this.user.email_verified_at,
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          role: user.role,
+          email_verified_at: user.email_verified_at,
         },
       }).then(
         (res) => {
