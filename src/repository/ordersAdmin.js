@@ -1,4 +1,4 @@
-import axiosInstances from "./axios";
+import axiosInstances from "@/repository/axios";
 const name = 'ordersAdmin';
 const ordersAdmin = {
  get: function(params='') {

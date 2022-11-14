@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import Categories from "../../repository/categories";
+import Categories from "@/repository/categories";
 export default {
   name: "listcategories",
   data() {

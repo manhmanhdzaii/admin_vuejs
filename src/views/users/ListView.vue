@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import Users from "../../repository/users";
+import Users from "@/repository/users";
 export default {
   name: "listuser",
   data() {

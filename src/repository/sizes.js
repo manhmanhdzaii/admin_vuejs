@@ -1,4 +1,4 @@
-import axiosInstances from "./axios";
+import axiosInstances from "@/repository/axios";
 const name = 'sizes';
 const Sizes = {
  get: function() {

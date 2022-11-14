@@ -2,32 +2,20 @@
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Thêm danh mục sản phẩm</h1>
   </div>
-  <Form @submit="save()" :validation-schema="schema">
-    <div class="mb-3">
-      <label for="">Tên danh mục</label>
-      <Field
-        name="name"
-        type="text"
-        class="form-control"
-        placeholder="Nhập tên danh mục...."
-        v-model="category.name"
-      />
-      <span style="color: red" v-if="err.name"> {{ err.name[0] }} </span>
-      <ErrorMessage style="color: red" name="name" />
-    </div>
-    <button
-      class="btn btn-primary"
-      type="submit"
-      :class="{ pointer: isPointer }"
-    >
-      Thêm mới
-    </button>
-  </Form>
+  <CategoryCpm
+    :isPointer="isPointer"
+    @changeCategory="save"
+    :err="err"
+    :category="category"
+    :schema="schema"
+    :title="title"
+  />
 </template>
 
 <script>
-import Categories from "../../repository/categories";
-import { Form, Field, ErrorMessage } from "vee-validate";
+import CategoryCpm from "@/components/Category.vue";
+import Categories from "@/repository/categories";
+import { Form } from "vee-validate";
 import * as yup from "yup";
 export default {
   name: "adduser",
@@ -38,12 +26,12 @@ export default {
       },
       err: [],
       isPointer: false,
+      title: "Thêm mới",
     };
   },
   components: {
     Form,
-    Field,
-    ErrorMessage,
+    CategoryCpm,
   },
   computed: {
     schema() {
@@ -53,10 +41,10 @@ export default {
     },
   },
   methods: {
-    save() {
+    save(category) {
       this.isPointer = true;
       var data = {
-        name: this.category.name,
+        name: category.name,
       };
       Categories.post(data).then(
         (res) => {

@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import Orders from "../../repository/ordersAdmin";
+import Orders from "@/repository/ordersAdmin";
 export default {
   name: "listorders",
   data() {

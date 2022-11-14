@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import Login from "../repository/auth/login";
+import Login from "@/repository/auth/login";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 export default {

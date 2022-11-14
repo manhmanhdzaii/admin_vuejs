@@ -164,10 +164,10 @@
 </template>
 
 <script>
-import Products from "../../repository/products";
-import Categories from "../../repository/categories";
-import Sizes from "../../repository/sizes";
-import Colors from "../../repository/colors";
+import Products from "@/repository/products";
+import Categories from "@/repository/categories";
+import Sizes from "@/repository/sizes";
+import Colors from "@/repository/colors";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 export default {

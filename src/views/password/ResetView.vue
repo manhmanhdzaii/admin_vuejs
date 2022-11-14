@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import ResetPass from "../../repository/password/reset";
+import ResetPass from "@/repository/password/reset";
 export default {
   name: "resetpass",
   data() {

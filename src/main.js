@@ -7,7 +7,7 @@ import { createStore } from 'vuex'
 
 import '../public/css/all.min.css'
 import '../public/css/sb-admin-2.min.css'
-import './assets/main.css'
+import '@/assets/main.css'
 // import dotenv from 'dotenv'
 
 // dotenv.config()

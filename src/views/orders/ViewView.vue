@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import Orders from "../../repository/ordersAdmin";
+import Orders from "@/repository/ordersAdmin";
 export default {
   name: "vieworder",
   data() {
@@ -49,7 +49,6 @@ export default {
       var total = 0;
       this.ListProducts.forEach((element) => {
         total += element.price * element.amount;
-        console.log(total);
       });
       return total;
     },

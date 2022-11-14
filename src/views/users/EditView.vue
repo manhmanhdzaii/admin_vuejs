@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import Users from "../../repository/users";
+import Users from "@/repository/users";
 import * as yup from "yup";
-import UserCpm from "../../components/User.vue";
+import UserCpm from "@/components/User.vue";
 export default {
   name: "edituser",
   data() {

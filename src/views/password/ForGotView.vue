@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import ForgotPass from "../../repository/password/forgot";
+import ForgotPass from "@/repository/password/forgot";
 export default {
   name: "forgotpass",
   data() {
