@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import ResetPass from "../../repository/password/reset";
 export default {
   name: "resetpass",
   data() {
@@ -84,16 +85,13 @@ export default {
   methods: {
     save() {
       this.isPointer = true;
-      this.$request({
-        method: "post",
-        url: import.meta.env.VITE_API_URL + "reset-password",
-        data: {
-          email: this.data.email,
-          password: this.data.password,
-          password_confirmation: this.data.password_confirmation,
-          token: this.$route.params.token,
-        },
-      }).then(
+      var data = {
+        email: this.data.email,
+        password: this.data.password,
+        password_confirmation: this.data.password_confirmation,
+        token: this.$route.params.token,
+      };
+      ResetPass.post(data).then(
         (res) => {
           console.log(res);
           alert(res.data.content);

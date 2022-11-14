@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import Users from "../../repository/users";
 export default {
   name: "listuser",
   data() {
@@ -69,7 +70,7 @@ export default {
   },
   methods: {
     getList() {
-      this.$request.get(import.meta.env.VITE_API_URL + "users/").then((res) => {
+      Users.get().then((res) => {
         if (res.data.status == "success") {
           console.log(res);
           this.ListUser = res.data.data;
@@ -77,13 +78,8 @@ export default {
       });
     },
     delete_user(e) {
-      this.$request({
-        method: "delete",
-        url: import.meta.env.VITE_API_URL + "users/" + e.target.value,
-        data: {
-          id: e.target.value,
-        },
-      }).then((res) => {
+      var id = e.target.value;
+      Users.delete(id).then((res) => {
         if (res.data.status == "success") {
           alert("Xóa người dùng thành công");
           this.getList();

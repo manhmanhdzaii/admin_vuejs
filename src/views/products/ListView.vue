@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import Products from "../../repository/products";
 import cpnPagination from "../../components/includes/Pagination.vue";
 export default {
   name: "listproducts",
@@ -106,18 +107,16 @@ export default {
   },
   methods: {
     getList() {
-      this.$request
-        .get(import.meta.env.VITE_API_URL + "products/")
-        .then((res) => {
-          console.log(res);
-          if (res.data.status == "success") {
-            this.ListProducts = res.data.data.data;
-            this.pagination.currentPage = res.data.data.current_page;
-            this.pagination.totalPages = res.data.data.last_page;
-            this.pagination.total = res.data.data.total;
-            this.pagination.perPage = res.data.data.per_page;
-          }
-        });
+      Products.get().then((res) => {
+        console.log(res);
+        if (res.data.status == "success") {
+          this.ListProducts = res.data.data.data;
+          this.pagination.currentPage = res.data.data.current_page;
+          this.pagination.totalPages = res.data.data.last_page;
+          this.pagination.total = res.data.data.total;
+          this.pagination.perPage = res.data.data.per_page;
+        }
+      });
     },
     onPageChange(page) {
       this.pagination.currentPage = page;
@@ -136,27 +135,20 @@ export default {
     },
     search() {
       var name = this.name;
-      this.$request
-        .get(import.meta.env.VITE_API_URL + "products?name=" + name)
-        .then((res) => {
-          console.log(res);
-          if (res.data.status == "success") {
-            this.ListProducts = res.data.data.data;
-            this.pagination.currentPage = res.data.data.current_page;
-            this.pagination.totalPages = res.data.data.last_page;
-            this.pagination.total = res.data.data.total;
-            this.pagination.perPage = res.data.data.per_page;
-          }
-        });
+      Products.get("?name=" + name).then((res) => {
+        console.log(res);
+        if (res.data.status == "success") {
+          this.ListProducts = res.data.data.data;
+          this.pagination.currentPage = res.data.data.current_page;
+          this.pagination.totalPages = res.data.data.last_page;
+          this.pagination.total = res.data.data.total;
+          this.pagination.perPage = res.data.data.per_page;
+        }
+      });
     },
     delete_products(e) {
-      this.$request({
-        method: "delete",
-        url: import.meta.env.VITE_API_URL + "products/" + e.target.value,
-        data: {
-          id: e.target.value,
-        },
-      }).then((res) => {
+      var id = e.target.value;
+      Products.delete(id).then((res) => {
         console.log(res);
         if (res.data.status == "success") {
           alert("Xóa sản phẩm thành công");

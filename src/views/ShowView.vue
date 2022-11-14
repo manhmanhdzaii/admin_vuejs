@@ -88,7 +88,9 @@
 </template>
 
 <script>
+import infoUser from "../repository/infoUser";
 import { Form, Field, ErrorMessage } from "vee-validate";
+import axiosInstances from "../repository/axios";
 import * as yup from "yup";
 export default {
   name: "edituser",
@@ -121,14 +123,7 @@ export default {
   },
   methods: {
     getUser() {
-      var token = localStorage.getItem("token");
-      this.$request({
-        method: "get",
-        url: import.meta.env.VITE_API_URL + "infoUser",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).then((res) => {
+      infoUser.get().then((res) => {
         console.log(res.data.data);
         this.user = res.data.data;
         this.email_verified_at = res.data.data.email_verified_at ? 1 : 0;
@@ -137,28 +132,20 @@ export default {
     },
     save() {
       this.isPointer = true;
-      var token = localStorage.getItem("token");
       let name = document.querySelector("#name").value;
       let email = document.querySelector("#email").value;
       let password = document.querySelector("#password").value;
       let role = document.querySelector("#role").value;
       let email_verified_at =
         document.querySelector("#email_verified_at").value;
-      this.$request({
-        method: "put",
-        url: import.meta.env.VITE_API_URL + "infoUser/",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        data: {
-          name: name,
-          email: email,
-          password: password,
-          role: role,
-          email_verified_at: email_verified_at,
-        },
-      }).then(
+      var data = {
+        name: name,
+        email: email,
+        password: password,
+        role: role,
+        email_verified_at: email_verified_at,
+      };
+      infoUser.put(data).then(
         (res) => {
           if (res.data.status == "success") {
             alert("Cập nhật người dùng thành công");

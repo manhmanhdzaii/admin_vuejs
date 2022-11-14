@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import Orders from "../../repository/ordersAdmin";
 export default {
   name: "listorders",
   data() {
@@ -101,15 +102,13 @@ export default {
   },
   methods: {
     getList() {
-      this.$request
-        .get(import.meta.env.VITE_API_URL + "ordersAdmin/")
-        .then((res) => {
-          console.log(res);
-          if (res.data.status == "success") {
-            this.ListOrders = res.data.data.data;
-            this.ListType = res.data.type;
-          }
-        });
+      Orders.get().then((res) => {
+        console.log(res);
+        if (res.data.status == "success") {
+          this.ListOrders = res.data.data.data;
+          this.ListType = res.data.type;
+        }
+      });
     },
     checkType(val1, val2) {
       if (val1 == val2) {
@@ -118,13 +117,8 @@ export default {
       return false;
     },
     delete_order(e) {
-      this.$request({
-        method: "delete",
-        url: import.meta.env.VITE_API_URL + "ordersAdmin/" + e.target.value,
-        data: {
-          id: e.target.value,
-        },
-      }).then((res) => {
+      var id = e.target.value;
+      Orders.delete(id).then((res) => {
         console.log(res);
         if (res.data.status == "success") {
           alert("Xóa đơn hàng thành công");
@@ -137,14 +131,11 @@ export default {
     changeTypeOrder(e) {
       var id_order = e.target.getAttribute("order_id");
       var type = e.target.value;
-      this.$request({
-        method: "post",
-        url: import.meta.env.VITE_API_URL + "ordersAdmin/",
-        data: {
-          order: id_order,
-          type: type,
-        },
-      }).then((res) => {
+      var data = {
+        order: id_order,
+        type: type,
+      };
+      Orders.post(data).then((res) => {
         console.log(res);
         if (res.data.status == "success") {
           alert("Cập nhật trạng thái đơn hàng thành công");
@@ -156,14 +147,12 @@ export default {
     },
     search() {
       var name = this.name;
-      this.$request
-        .get(import.meta.env.VITE_API_URL + "ordersAdmin?name=" + name)
-        .then((res) => {
-          console.log(res);
-          if (res.data.status == "success") {
-            this.ListOrders = res.data.data.data;
-          }
-        });
+      Orders.get("?name=" + name).then((res) => {
+        console.log(res);
+        if (res.data.status == "success") {
+          this.ListOrders = res.data.data.data;
+        }
+      });
     },
   },
 };

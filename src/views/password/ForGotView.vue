@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import ForgotPass from "../../repository/password/forgot";
 export default {
   name: "forgotpass",
   data() {
@@ -47,13 +48,12 @@ export default {
   methods: {
     save() {
       this.isPointer = true;
-      this.$request({
-        method: "post",
-        url: import.meta.env.VITE_API_URL + "forgot-password",
-        data: {
-          email: this.data.email,
-        },
-      }).then(
+
+      var data = {
+        email: this.data.email,
+      };
+
+      ForgotPass.post(data).then(
         (res) => {
           alert(res.data.content);
           if (res.data.status == "success") {
