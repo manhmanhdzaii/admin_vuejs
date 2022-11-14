@@ -1,4 +1,4 @@
-import axiosInstances from "../axios";
+import axiosInstances from "@/repository/axios";
 const name = 'login';
 const Login = {
  post: function(data){

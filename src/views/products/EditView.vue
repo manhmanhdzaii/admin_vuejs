@@ -147,10 +147,10 @@
 </template>
 
 <script>
-import Products from "../../repository/products";
-import Categories from "../../repository/categories";
-import Sizes from "../../repository/sizes";
-import Colors from "../../repository/colors";
+import Products from "@/repository/products";
+import Categories from "@/repository/categories";
+import Sizes from "@/repository/sizes";
+import Colors from "@/repository/colors";
 export default {
   name: "editproduct",
   data() {
@@ -177,7 +177,7 @@ export default {
       });
     },
     getSize() {
-      this.$request.get(import.meta.env.VITE_API_URL + "sizes").then((res) => {
+      Sizes.get().then((res) => {
         this.sizes = res.data.data;
       });
     },

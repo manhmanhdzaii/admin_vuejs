@@ -1,25 +1,25 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import ShowView from '../views/ShowView.vue'
+import HomeView from '@/views/HomeView.vue'
+import LoginView from '@/views/LoginView.vue'
+import ShowView from '@/views/ShowView.vue'
 
-import ListUsersView from '../views/users/ListView.vue'
-import AddUsersView from '../views/users/AddView.vue'
-import EditUsersView from '../views/users/EditView.vue'
+import ListUsersView from '@/views/users/ListView.vue'
+import AddUsersView from '@/views/users/AddView.vue'
+import EditUsersView from '@/views/users/EditView.vue'
 
-import ListCategoriesView from '../views/categories/ListView.vue'
-import AddCategoriesView from '../views/categories/AddView.vue'
-import EditCategoriesView from '../views/categories/EditView.vue'
+import ListCategoriesView from '@/views/categories/ListView.vue'
+import AddCategoriesView from '@/views/categories/AddView.vue'
+import EditCategoriesView from '@/views/categories/EditView.vue'
 
-import ListProductsView from '../views/products/ListView.vue'
-import AddProductsView from '../views/products/AddView.vue'
-import EditProductsView from '../views/products/EditView.vue'
+import ListProductsView from '@/views/products/ListView.vue'
+import AddProductsView from '@/views/products/AddView.vue'
+import EditProductsView from '@/views/products/EditView.vue'
 
-import ListOrdersView from '../views/orders/ListView.vue'
-import ViewOrdersView from '../views/orders/ViewView.vue'
+import ListOrdersView from '@/views/orders/ListView.vue'
+import ViewOrdersView from '@/views/orders/ViewView.vue'
 
-import ForGotView from '../views/password/ForGotView.vue'
-import ResetView from '../views/password/ResetView.vue'
+import ForGotView from '@/views/password/ForGotView.vue'
+import ResetView from '@/views/password/ResetView.vue'
 
 function is_outside(to, from, next){
   var token = localStorage.getItem('token');

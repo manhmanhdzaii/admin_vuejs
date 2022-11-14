@@ -83,8 +83,8 @@
 </template>
 
 <script>
-import Products from "../../repository/products";
-import cpnPagination from "../../components/includes/Pagination.vue";
+import Products from "@/repository/products";
+import cpnPagination from "@/components/includes/Pagination.vue";
 export default {
   name: "listproducts",
   data() {

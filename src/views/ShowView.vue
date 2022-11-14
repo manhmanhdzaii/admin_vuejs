@@ -3,94 +3,60 @@
     <h1 class="h3 mb-0 text-gray-800">Thông tin cá nhân</h1>
   </div>
   <Form @submit="save()" :validation-schema="schema">
-    <div class="mb-3">
-      <label for="">Tên</label>
-      <Field
-        name="name"
-        id="name"
-        type="text"
-        class="form-control"
-        placeholder="Tên...."
-        v-model="user.name"
-      />
-      <span style="color: red" v-if="sub_err.name">
-        {{ sub_err.name[0] }}
-      </span>
-      <ErrorMessage style="color: red" name="name" />
-    </div>
-    <div class="mb-3">
-      <label for="">Email</label>
-      <Field
-        name="email"
-        id="email"
-        type="text"
-        class="form-control"
-        placeholder="Email...."
-        v-model="user.email"
-      />
-      <span style="color: red" v-if="sub_err.email">
-        {{ sub_err.email[0] }}
-      </span>
-      <ErrorMessage style="color: red" name="email" />
-    </div>
-    <div class="mb-3">
-      <label for="">Mật khẩu(Không nhập nếu không đổi)</label>
-      <Field
-        name="password"
-        id="password"
-        type="password"
-        class="form-control"
-        placeholder="Password...."
-      />
-      <span style="color: red" v-if="sub_err.password">
-        {{ sub_err.password[0] }}
-      </span>
-    </div>
-    <div class="mb-3">
-      <label for="">Chức vụ</label>
-      <Field
-        as="select"
-        name="role"
-        class="form-control"
-        id="role"
-        v-model="user.role"
-        disabled
-      >
-        <option value="">Chọn chức vụ</option>
-        <option value="nomal">Người dùng</option>
-        <option value="admin">Admin</option>
-      </Field>
-      <span style="color: red" v-if="sub_err.role">
-        {{ sub_err.role[0] }}
-      </span>
-      <ErrorMessage style="color: red" name="role" />
-    </div>
-    <div class="mb-3">
-      <label for="">Kích hoạt</label>
-      <Field
-        as="select"
-        name="email_verified_at"
-        class="form-control"
-        id="email_verified_at"
-        v-model="email_verified_at"
-      >
-        <option value="">Chọn kích hoạt</option>
-        <option value="0">Không kích hoạt</option>
-        <option value="1">Kích hoạt</option>
-      </Field>
-      <span style="color: red" v-if="sub_err.email_verified_at">
-        {{ sub_err.email_verified_at[0] }}
-      </span>
-      <ErrorMessage style="color: red" name="email_verified_at" />
-    </div>
+    <inputCpn
+      label="Tên"
+      name="name"
+      type="text"
+      placeholder="Tên.."
+      :value="user.name"
+      :err="sub_err.name ? sub_err.name[0] : ''"
+      @input="chageValue"
+    />
+    <inputCpn
+      label="Email"
+      name="email"
+      type="text"
+      placeholder="Email...."
+      :value="user.email"
+      :err="sub_err.email ? sub_err.email[0] : ''"
+      @input="chageValue"
+    />
+    <inputCpn
+      label="Mật khẩu(Không nhập nếu không đổi)"
+      name="password"
+      type="password"
+      placeholder="Password...."
+      :err="sub_err.password ? sub_err.password[0] : ''"
+      @input="chageValue"
+    />
+    <selectCpn
+      label="Chức vụ"
+      name="role"
+      disabled="true"
+      placeholder="Chọn chức vụ"
+      @input="chageValue"
+      :err="sub_err.role ? sub_err.role[0] : ''"
+      :value="user.role"
+      :arrSelect="arrRole"
+    />
+    <selectCpn
+      label="Kích hoạt"
+      name="email_verified_at"
+      placeholder="Chọn kích hoạt"
+      @input="chageValue"
+      :err="sub_err.email_verified_at ? sub_err.email_verified_at[0] : ''"
+      :value="user.email_verified_at"
+      :arrSelect="arrVerify"
+    />
     <button class="btn btn-primary" type="submit">Cập nhật</button>
   </Form>
 </template>
 
 <script>
-import infoUser from "../repository/infoUser";
+import infoUser from "@/repository/infoUser";
+import inputCpn from "@/components/common/InputCpn.vue";
+import selectCpn from "@/components/common/SelectCpn.vue";
 import { Form, Field, ErrorMessage } from "vee-validate";
-import axiosInstances from "../repository/axios";
 import * as yup from "yup";
 export default {
   name: "edituser",
@@ -99,6 +65,14 @@ export default {
       user: [],
       sub_err: [],
       email_verified_at: "",
+      arrRole: {
+        nomal: "Người dùng",
+        admin: "Admin",
+      },
+      arrVerify: {
+        0: "Không kích hoạt",
+        1: "Kích hoạt",
+      },
       isPointer: false,
       favorite: "tea",
     };
@@ -108,8 +82,8 @@ export default {
   },
   components: {
     Form,
-    Field,
-    ErrorMessage,
+    inputCpn,
+    selectCpn,
   },
   computed: {
     schema() {
@@ -126,18 +100,17 @@ export default {
       infoUser.get().then((res) => {
         console.log(res.data.data);
         this.user = res.data.data;
-        this.email_verified_at = res.data.data.email_verified_at ? 1 : 0;
+        this.user.email_verified_at = res.data.data.email_verified_at ? 1 : 0;
         this.$store.commit("change_name", res.data.data.name);
       });
     },
     save() {
       this.isPointer = true;
-      let name = document.querySelector("#name").value;
-      let email = document.querySelector("#email").value;
-      let password = document.querySelector("#password").value;
-      let role = document.querySelector("#role").value;
-      let email_verified_at =
-        document.querySelector("#email_verified_at").value;
+      let name = this.user.name;
+      let email = this.user.email;
+      let password = this.user.password;
+      let role = this.user.role;
+      let email_verified_at = this.user.email_verified_at;
       var data = {
         name: name,
         email: email,
@@ -160,6 +133,9 @@ export default {
           console.log(err);
         }
       );
+    },
+    chageValue(val, name) {
+      this.user[name] = val;
     },
   },
 };
