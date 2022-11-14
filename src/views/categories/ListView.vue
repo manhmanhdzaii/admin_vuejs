@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import Categories from "../../repository/categories";
 export default {
   name: "listcategories",
   data() {
@@ -81,23 +82,15 @@ export default {
   },
   methods: {
     getList() {
-      this.$request
-        .get(import.meta.env.VITE_API_URL + "categories/")
-        .then((res) => {
-          if (res.data.status == "success") {
-            this.ListCategories = res.data.data.data;
-          }
-        });
+      Categories.get().then((res) => {
+        if (res.data.status == "success") {
+          this.ListCategories = res.data.data.data;
+        }
+      });
     },
     delete_category(e) {
-      this.$request({
-        method: "delete",
-        url: import.meta.env.VITE_API_URL + "categories/" + e.target.value,
-        data: {
-          id: e.target.value,
-        },
-      }).then((res) => {
-        console.log(res);
+      var id = e.target.value;
+      Categories.delete(id).then((res) => {
         if (res.data.status == "success") {
           alert("Xóa danh mục sản phẩm thành công");
           this.getList();
@@ -108,14 +101,12 @@ export default {
     },
     search() {
       var name = this.name;
-      this.$request
-        .get(import.meta.env.VITE_API_URL + "categories?name=" + name)
-        .then((res) => {
-          console.log(res);
-          if (res.data.status == "success") {
-            this.ListCategories = res.data.data.data;
-          }
-        });
+      Categories.get("?name=" + name).then((res) => {
+        console.log(res);
+        if (res.data.status == "success") {
+          this.ListCategories = res.data.data.data;
+        }
+      });
     },
   },
 };

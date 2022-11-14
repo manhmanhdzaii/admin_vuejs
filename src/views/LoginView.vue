@@ -18,6 +18,9 @@
           v-model="data.email"
         />
         <p class="err">
+          <span v-if="errors.email">
+            {{ errors.email }}
+          </span>
           <ErrorMessage name="user_name" />
         </p>
       </div>
@@ -55,6 +58,7 @@
 </template>
 
 <script>
+import Login from "../repository/auth/login";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 export default {
@@ -65,6 +69,7 @@ export default {
         email: "",
         password: "",
       },
+      errors: [],
       isPointer: false,
     };
   },
@@ -76,14 +81,11 @@ export default {
   methods: {
     save() {
       this.isPointer = true;
-      this.$request({
-        method: "post",
-        url: import.meta.env.VITE_API_URL + "login",
-        data: {
-          email: this.data.email,
-          password: this.data.password,
-        },
-      }).then((res) => {
+      var data = {
+        email: this.data.email,
+        password: this.data.password,
+      };
+      Login.post(data).then((res) => {
         if (res.data.status == 200) {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("name", res.data.name);

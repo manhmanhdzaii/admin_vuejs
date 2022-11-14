@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import Users from "../../repository/users";
 import * as yup from "yup";
 import UserCpm from "../../components/User.vue";
 export default {
@@ -43,29 +44,23 @@ export default {
   },
   methods: {
     getUser() {
-      this.$request
-        .get(import.meta.env.VITE_API_URL + "users/" + this.$route.params.id)
-        .then((res) => {
-          this.user = res.data.data;
-          this.user.email_verified_at = res.data.data.email_verified_at ? 1 : 0;
-        });
+      var id = this.$route.params.id;
+      Users.getById(id).then((res) => {
+        this.user = res.data.data;
+        this.user.email_verified_at = res.data.data.email_verified_at ? 1 : 0;
+      });
     },
     save(user) {
       this.isPointer = true;
-      this.$request({
-        method: "put",
-        url: import.meta.env.VITE_API_URL + "users/" + this.$route.params.id,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: {
-          name: user.name,
-          email: user.email,
-          password: user.password,
-          role: user.role,
-          email_verified_at: user.email_verified_at,
-        },
-      }).then(
+      var data = {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        role: user.role,
+        email_verified_at: user.email_verified_at,
+      };
+      var id = this.$route.params.id;
+      Users.put(id, data).then(
         (res) => {
           if (res.data.status == "success") {
             alert("Cập nhật người dùng thành công");

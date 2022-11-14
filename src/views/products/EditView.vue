@@ -147,6 +147,10 @@
 </template>
 
 <script>
+import Products from "../../repository/products";
+import Categories from "../../repository/categories";
+import Sizes from "../../repository/sizes";
+import Colors from "../../repository/colors";
 export default {
   name: "editproduct",
   data() {
@@ -168,7 +172,7 @@ export default {
   },
   methods: {
     getColors() {
-      this.$request.get(import.meta.env.VITE_API_URL + "colors").then((res) => {
+      Colors.get().then((res) => {
         this.colors = res.data.data;
       });
     },
@@ -178,20 +182,17 @@ export default {
       });
     },
     getCategories() {
-      this.$request
-        .get(import.meta.env.VITE_API_URL + "categories")
-        .then((res) => {
-          this.categories = res.data.data.data;
-        });
+      Categories.get().then((res) => {
+        this.categories = res.data.data.data;
+      });
     },
     getProduct() {
-      this.$request
-        .get(import.meta.env.VITE_API_URL + "products/" + this.$route.params.id)
-        .then((res) => {
-          this.product = res.data.data;
-          this.imgs = res.data.imgs;
-          this.productdes = res.data.data.description;
-        });
+      var id = this.$route.params.id;
+      Products.getById(id).then((res) => {
+        this.product = res.data.data;
+        this.imgs = res.data.imgs;
+        this.productdes = res.data.data.description;
+      });
     },
     checkSelected(val, str) {
       if (str.indexOf(val) != -1) {

@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import Orders from "../../repository/ordersAdmin";
 export default {
   name: "vieworder",
   data() {
@@ -55,19 +56,16 @@ export default {
   },
   methods: {
     getList() {
-      this.$request
-        .get(
-          import.meta.env.VITE_API_URL + "ordersAdmin/" + this.$route.params.id
-        )
-        .then((res) => {
-          console.log(res);
-          if (res.data.status == "success") {
-            this.ListProducts = res.data.data.data;
-          } else {
-            alert("Có lỗi xảy ra");
-            this.$router.push("/orders/list");
-          }
-        });
+      var id = this.$route.params.id;
+      Orders.getById(id).then((res) => {
+        console.log(res);
+        if (res.data.status == "success") {
+          this.ListProducts = res.data.data.data;
+        } else {
+          alert("Có lỗi xảy ra");
+          this.$router.push("/orders/list");
+        }
+      });
     },
   },
 };

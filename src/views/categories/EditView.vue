@@ -2,7 +2,7 @@
   <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Sửa danh mục sản phẩm</h1>
   </div>
-  <Form @submit.prevent="save()" :validation-schema="schema">
+  <Form @submit="save()" :validation-schema="schema">
     <div class="mb-3">
       <label for="">Tên danh mục</label>
       <Field
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import Categories from "../../repository/categories";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 export default {
@@ -55,33 +56,21 @@ export default {
   },
   methods: {
     getCategory() {
-      this.$request
-        .get(
-          import.meta.env.VITE_API_URL + "categories/" + this.$route.params.id
-        )
-        .then((res) => {
-          if (res.data.status == "success") {
-            this.category = res.data.data;
-          } else {
-            alert("có lỗi xảy ra");
-            this.$router.push("/categories/list");
-          }
-        });
+      Categories.getById(this.$route.params.id).then((res) => {
+        if (res.data.status == "success") {
+          this.category = res.data.data;
+        } else {
+          alert("có lỗi xảy ra");
+          this.$router.push("/categories/list");
+        }
+      });
     },
     save() {
       this.isPointer = true;
-      let name = document.querySelector("#name").value;
-      this.$request({
-        method: "put",
-        url:
-          import.meta.env.VITE_API_URL + "categories/" + this.$route.params.id,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: {
-          name: name,
-        },
-      }).then(
+      var data = {
+        name: this.category.name,
+      };
+      Categories.put(this.$route.params.id, data).then(
         (res) => {
           if (res.data.status == "success") {
             alert("Cập nhật danh mục sản phẩm thành công");

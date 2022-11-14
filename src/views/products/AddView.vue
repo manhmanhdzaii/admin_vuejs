@@ -164,6 +164,10 @@
 </template>
 
 <script>
+import Products from "../../repository/products";
+import Categories from "../../repository/categories";
+import Sizes from "../../repository/sizes";
+import Colors from "../../repository/colors";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 export default {
@@ -213,22 +217,20 @@ export default {
   },
   methods: {
     getColors() {
-      this.$request.get(import.meta.env.VITE_API_URL + "colors").then((res) => {
+      Colors.get().then((res) => {
         // console.log(res);
         this.colors = res.data.data;
       });
     },
     getSize() {
-      this.$request.get(import.meta.env.VITE_API_URL + "sizes").then((res) => {
+      Sizes.get().then((res) => {
         this.sizes = res.data.data;
       });
     },
     getCategories() {
-      this.$request
-        .get(import.meta.env.VITE_API_URL + "categories")
-        .then((res) => {
-          this.categories = res.data.data.data;
-        });
+      Categories.get().then((res) => {
+        this.categories = res.data.data.data;
+      });
     },
     loadFile1(event) {
       var src = "";
@@ -303,14 +305,7 @@ export default {
 
       data.append("description", this.product.description);
 
-      this.$request({
-        method: "post",
-        url: import.meta.env.VITE_API_URL + "products/",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        data: data,
-      }).then(
+      Products.post(data).then(
         (res) => {
           if (res.data.status == "success") {
             alert("Thêm mới sản phẩm thành công");

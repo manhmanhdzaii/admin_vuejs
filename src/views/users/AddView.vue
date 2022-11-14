@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import Users from "../../repository/users";
 import * as yup from "yup";
 import UserCpm from "../../components/User.vue";
 export default {
@@ -49,20 +50,14 @@ export default {
   methods: {
     save(user) {
       this.isPointer = true;
-      this.$request({
-        method: "post",
-        url: import.meta.env.VITE_API_URL + "users/",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: {
-          name: user.name,
-          email: user.email,
-          password: user.password,
-          role: user.role,
-          email_verified_at: user.email_verified_at,
-        },
-      }).then(
+      var data = {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        role: user.role,
+        email_verified_at: user.email_verified_at,
+      };
+      Users.post(data).then(
         (res) => {
           if (res.data.status == "success") {
             alert("Thêm mới người dùng thành công");

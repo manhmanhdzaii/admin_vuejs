@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import Categories from "../../repository/categories";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 export default {
@@ -54,16 +55,10 @@ export default {
   methods: {
     save() {
       this.isPointer = true;
-      this.$request({
-        method: "post",
-        url: import.meta.env.VITE_API_URL + "categories/",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        data: {
-          name: this.category.name,
-        },
-      }).then(
+      var data = {
+        name: this.category.name,
+      };
+      Categories.post(data).then(
         (res) => {
           if (res.data.status == "success") {
             alert("Thêm mới danh mục sản phẩm thành công");
