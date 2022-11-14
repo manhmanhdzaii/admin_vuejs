@@ -81,16 +81,18 @@ export default {
   },
   methods: {
     getList() {
-      this.$request.get("http://127.0.0.1:8000/api/categories/").then((res) => {
-        if (res.data.status == "success") {
-          this.ListCategories = res.data.data.data;
-        }
-      });
+      this.$request
+        .get(import.meta.env.VITE_API_URL + "categories/")
+        .then((res) => {
+          if (res.data.status == "success") {
+            this.ListCategories = res.data.data.data;
+          }
+        });
     },
     delete_category(e) {
       this.$request({
         method: "delete",
-        url: "http://127.0.0.1:8000/api/categories/" + e.target.value,
+        url: import.meta.env.VITE_API_URL + "categories/" + e.target.value,
         data: {
           id: e.target.value,
         },
@@ -107,7 +109,7 @@ export default {
     search() {
       var name = this.name;
       this.$request
-        .get("http://127.0.0.1:8000/api/categories?name=" + name)
+        .get(import.meta.env.VITE_API_URL + "categories?name=" + name)
         .then((res) => {
           console.log(res);
           if (res.data.status == "success") {

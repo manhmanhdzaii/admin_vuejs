@@ -56,7 +56,9 @@ export default {
   methods: {
     getCategory() {
       this.$request
-        .get("http://127.0.0.1:8000/api/categories/" + this.$route.params.id)
+        .get(
+          import.meta.env.VITE_API_URL + "categories/" + this.$route.params.id
+        )
         .then((res) => {
           if (res.data.status == "success") {
             this.category = res.data.data;
@@ -71,7 +73,8 @@ export default {
       let name = document.querySelector("#name").value;
       this.$request({
         method: "put",
-        url: "http://127.0.0.1:8000/api/categories/" + this.$route.params.id,
+        url:
+          import.meta.env.VITE_API_URL + "categories/" + this.$route.params.id,
         headers: {
           "Content-Type": "application/json",
         },

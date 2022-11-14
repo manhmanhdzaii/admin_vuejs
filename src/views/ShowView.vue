@@ -124,7 +124,7 @@ export default {
       var token = localStorage.getItem("token");
       this.$request({
         method: "get",
-        url: "http://127.0.0.1:8000/api/infoUser",
+        url: import.meta.env.VITE_API_URL + "infoUser",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -146,7 +146,7 @@ export default {
         document.querySelector("#email_verified_at").value;
       this.$request({
         method: "put",
-        url: "http://127.0.0.1:8000/api/infoUser/",
+        url: import.meta.env.VITE_API_URL + "infoUser/",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

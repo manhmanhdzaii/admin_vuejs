@@ -102,7 +102,7 @@ export default {
   methods: {
     getList() {
       this.$request
-        .get("http://127.0.0.1:8000/api/ordersAdmin/")
+        .get(import.meta.env.VITE_API_URL + "ordersAdmin/")
         .then((res) => {
           console.log(res);
           if (res.data.status == "success") {
@@ -120,7 +120,7 @@ export default {
     delete_order(e) {
       this.$request({
         method: "delete",
-        url: "http://127.0.0.1:8000/api/ordersAdmin/" + e.target.value,
+        url: import.meta.env.VITE_API_URL + "ordersAdmin/" + e.target.value,
         data: {
           id: e.target.value,
         },
@@ -139,7 +139,7 @@ export default {
       var type = e.target.value;
       this.$request({
         method: "post",
-        url: "http://127.0.0.1:8000/api/ordersAdmin/",
+        url: import.meta.env.VITE_API_URL + "ordersAdmin/",
         data: {
           order: id_order,
           type: type,
@@ -157,7 +157,7 @@ export default {
     search() {
       var name = this.name;
       this.$request
-        .get("http://127.0.0.1:8000/api/ordersAdmin?name=" + name)
+        .get(import.meta.env.VITE_API_URL + "ordersAdmin?name=" + name)
         .then((res) => {
           console.log(res);
           if (res.data.status == "success") {

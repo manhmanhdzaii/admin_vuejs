@@ -44,7 +44,7 @@ export default {
   methods: {
     getUser() {
       this.$request
-        .get("http://127.0.0.1:8000/api/users/" + this.$route.params.id)
+        .get(import.meta.env.VITE_API_URL + "users/" + this.$route.params.id)
         .then((res) => {
           this.user = res.data.data;
           this.user.email_verified_at = res.data.data.email_verified_at ? 1 : 0;
@@ -54,7 +54,7 @@ export default {
       this.isPointer = true;
       this.$request({
         method: "put",
-        url: "http://127.0.0.1:8000/api/users/" + this.$route.params.id,
+        url: import.meta.env.VITE_API_URL + "users/" + this.$route.params.id,
         headers: {
           "Content-Type": "application/json",
         },

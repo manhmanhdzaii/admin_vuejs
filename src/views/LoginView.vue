@@ -78,7 +78,7 @@ export default {
       this.isPointer = true;
       this.$request({
         method: "post",
-        url: "http://127.0.0.1:8000/api/login",
+        url: import.meta.env.VITE_API_URL + "login",
         data: {
           email: this.data.email,
           password: this.data.password,

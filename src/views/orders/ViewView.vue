@@ -56,7 +56,9 @@ export default {
   methods: {
     getList() {
       this.$request
-        .get("http://127.0.0.1:8000/api/ordersAdmin/" + this.$route.params.id)
+        .get(
+          import.meta.env.VITE_API_URL + "ordersAdmin/" + this.$route.params.id
+        )
         .then((res) => {
           console.log(res);
           if (res.data.status == "success") {

@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     getList() {
-      this.$request.get("http://127.0.0.1:8000/api/users/").then((res) => {
+      this.$request.get(import.meta.env.VITE_API_URL + "users/").then((res) => {
         if (res.data.status == "success") {
           console.log(res);
           this.ListUser = res.data.data;
@@ -79,7 +79,7 @@ export default {
     delete_user(e) {
       this.$request({
         method: "delete",
-        url: "http://127.0.0.1:8000/api/users/" + e.target.value,
+        url: import.meta.env.VITE_API_URL + "users/" + e.target.value,
         data: {
           id: e.target.value,
         },

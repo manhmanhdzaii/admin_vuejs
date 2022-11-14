@@ -106,21 +106,23 @@ export default {
   },
   methods: {
     getList() {
-      this.$request.get("http://127.0.0.1:8000/api/products/").then((res) => {
-        console.log(res);
-        if (res.data.status == "success") {
-          this.ListProducts = res.data.data.data;
-          this.pagination.currentPage = res.data.data.current_page;
-          this.pagination.totalPages = res.data.data.last_page;
-          this.pagination.total = res.data.data.total;
-          this.pagination.perPage = res.data.data.per_page;
-        }
-      });
+      this.$request
+        .get(import.meta.env.VITE_API_URL + "products/")
+        .then((res) => {
+          console.log(res);
+          if (res.data.status == "success") {
+            this.ListProducts = res.data.data.data;
+            this.pagination.currentPage = res.data.data.current_page;
+            this.pagination.totalPages = res.data.data.last_page;
+            this.pagination.total = res.data.data.total;
+            this.pagination.perPage = res.data.data.per_page;
+          }
+        });
     },
     onPageChange(page) {
       this.pagination.currentPage = page;
       this.$request
-        .get("http://127.0.0.1:8000/api/products?page=" + page)
+        .get(import.meta.env.VITE_API_URL + "products?page=" + page)
         .then((res) => {
           console.log(res);
           if (res.data.status == "success") {
@@ -135,7 +137,7 @@ export default {
     search() {
       var name = this.name;
       this.$request
-        .get("http://127.0.0.1:8000/api/products?name=" + name)
+        .get(import.meta.env.VITE_API_URL + "products?name=" + name)
         .then((res) => {
           console.log(res);
           if (res.data.status == "success") {
@@ -150,7 +152,7 @@ export default {
     delete_products(e) {
       this.$request({
         method: "delete",
-        url: "http://127.0.0.1:8000/api/products/" + e.target.value,
+        url: import.meta.env.VITE_API_URL + "products/" + e.target.value,
         data: {
           id: e.target.value,
         },

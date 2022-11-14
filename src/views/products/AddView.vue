@@ -213,20 +213,22 @@ export default {
   },
   methods: {
     getColors() {
-      this.$request.get("http://127.0.0.1:8000/api/colors").then((res) => {
+      this.$request.get(import.meta.env.VITE_API_URL + "colors").then((res) => {
         // console.log(res);
         this.colors = res.data.data;
       });
     },
     getSize() {
-      this.$request.get("http://127.0.0.1:8000/api/sizes").then((res) => {
+      this.$request.get(import.meta.env.VITE_API_URL + "sizes").then((res) => {
         this.sizes = res.data.data;
       });
     },
     getCategories() {
-      this.$request.get("http://127.0.0.1:8000/api/categories").then((res) => {
-        this.categories = res.data.data.data;
-      });
+      this.$request
+        .get(import.meta.env.VITE_API_URL + "categories")
+        .then((res) => {
+          this.categories = res.data.data.data;
+        });
     },
     loadFile1(event) {
       var src = "";
@@ -303,7 +305,7 @@ export default {
 
       this.$request({
         method: "post",
-        url: "http://127.0.0.1:8000/api/products/",
+        url: import.meta.env.VITE_API_URL + "products/",
         headers: {
           "Content-Type": "multipart/form-data",
         },

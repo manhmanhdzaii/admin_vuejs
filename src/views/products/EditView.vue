@@ -168,23 +168,25 @@ export default {
   },
   methods: {
     getColors() {
-      this.$request.get("http://127.0.0.1:8000/api/colors").then((res) => {
+      this.$request.get(import.meta.env.VITE_API_URL + "colors").then((res) => {
         this.colors = res.data.data;
       });
     },
     getSize() {
-      this.$request.get("http://127.0.0.1:8000/api/sizes").then((res) => {
+      this.$request.get(import.meta.env.VITE_API_URL + "sizes").then((res) => {
         this.sizes = res.data.data;
       });
     },
     getCategories() {
-      this.$request.get("http://127.0.0.1:8000/api/categories").then((res) => {
-        this.categories = res.data.data.data;
-      });
+      this.$request
+        .get(import.meta.env.VITE_API_URL + "categories")
+        .then((res) => {
+          this.categories = res.data.data.data;
+        });
     },
     getProduct() {
       this.$request
-        .get("http://127.0.0.1:8000/api/products/" + this.$route.params.id)
+        .get(import.meta.env.VITE_API_URL + "products/" + this.$route.params.id)
         .then((res) => {
           this.product = res.data.data;
           this.imgs = res.data.imgs;
